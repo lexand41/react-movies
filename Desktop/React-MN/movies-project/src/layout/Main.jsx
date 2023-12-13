@@ -6,7 +6,7 @@ import Search from '../components/Search';
 const API_KEY = process.env.REACT_APP_API_KEY;
 
 const Main = () => {
-  const [state, setState] = useState([]);
+  const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const Main = () => {
     fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&s=matrix`)
       .then((res) => res.json())
       .then((data) => {
-        setState({ movies: data.Search });
+        setMovies(data.Search);
         setLoading(false);
       })
       .catch((err) => {
@@ -24,12 +24,14 @@ const Main = () => {
   }, []);
 
   const searchMovies = (str, type = 'all') => {
+    setLoading(true);
     fetch(
       `https://www.omdbapi.com/?apikey=${API_KEY}&s=${str}${type !== 'all' ? `&type=${type}` : ''}`,
     )
       .then((res) => res.json())
       .then((data) => {
-        setState({ movies: data.Search });
+        setLoading(false);
+        setMovies(data.Search);
       })
       .catch((err) => {
         console.error(err);
@@ -38,16 +40,6 @@ const Main = () => {
   };
 
   return (
-    // <main className='container content'>
-    //   <Search searchMovies={searchMovies} />
-    //   {movies && movies.length ? (
-    //     <Movies movies={state} />
-    //   ) : (
-    //     <h3>
-    //       <Preloader />
-    //     </h3>
-    //   )}
-    // </main>
     <main className='container content'>
       <Search searchMovies={searchMovies} />
       {loading ? (
@@ -55,7 +47,7 @@ const Main = () => {
           <Preloader />
         </h3>
       ) : (
-        <Movies movies={state} />
+        <Movies movies={movies} />
       )}
     </main>
   );

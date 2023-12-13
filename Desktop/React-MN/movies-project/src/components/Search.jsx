@@ -1,8 +1,10 @@
 import { useState } from 'react';
 
-const Search = ({ searchMovies }) => {
+const Search = (props) => {
+  const { searchMovies = Function.prototype } = props;
+
   const [search, setSearch] = useState('');
-  const [type, setType] = useState('All');
+  const [type, setType] = useState('all');
 
   const handleKey = (e) => {
     if (e.key === 'Enter') {
@@ -11,11 +13,16 @@ const Search = ({ searchMovies }) => {
   };
 
   const handleFilter = (e) => {
-    setType(
-      () => e.target.dataset.type,
-      () => searchMovies(search, type),
-    );
+    setType(e.target.dataset.type);
+    searchMovies(search, e.target.dataset.type);
   };
+
+  // const handleFilter = (e) => {
+  //   setType(
+  //     () => e.target.dataset.type,
+  //     () => searchMovies(search, type),
+  //   );
+  // };
 
   return (
     <div className='row'>
