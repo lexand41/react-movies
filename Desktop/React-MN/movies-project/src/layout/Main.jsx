@@ -11,21 +11,29 @@ const Main = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://www.omdbapi.com/?apikey=${API_KEY}&s=matrix`)
+    fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&s=matrix`)
       .then((res) => res.json())
       .then((data) => {
         setState({ movies: data.Search });
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
         setLoading(false);
       });
   }, []);
 
   const searchMovies = (str, type = 'all') => {
     fetch(
-      `http://www.omdbapi.com/?apikey=${API_KEY}&s=${str}${type !== 'all' ? `&type=${type}` : ''}`,
+      `https://www.omdbapi.com/?apikey=${API_KEY}&s=${str}${type !== 'all' ? `&type=${type}` : ''}`,
     )
       .then((res) => res.json())
       .then((data) => {
         setState({ movies: data.Search });
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
       });
   };
 
